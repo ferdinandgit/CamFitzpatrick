@@ -65,9 +65,16 @@ In order to start mesurement enter the RGB value of your reference in the text b
 
 The script is outpouting a csv file with 6 rows, 3 rows for the RGB refenrence color value, 3 rows for the RGB mesured color value. 
 
-Thus we can determine 3 simples functions that give the corrective factor for each RGB pixel components knowing the mesured RGB value of the pixel. 
+Thus we can determine 3 simples functions that give the corrective factor for each RGB pixel components knowing the mesured RGB value of the pixel. Let's consider ![equation](https://latex.codecogs.com/svg.image?\gamma) the corrective factor, each functions is declared like:
 
+![equation](https://latex.codecogs.com/svg.image?\gamma=f_{color}(Color_{mesured})=\frac{Color_{reference}}{Color_{mesured}})
 
+With all collected samples we can determine the ![equation](https://latex.codecogs.com/svg.image?\gamma) for each pixel using a scipy first degree interpolation  
+
+ 
+ ![equation](https://latex.codecogs.com/svg.image?fbleu(B_{mesured})*B_{mesured}=B_{corrected})
+ ![equation](https://latex.codecogs.com/svg.image?fgreen(G_{mesured})*G_{mesured}=G_{corrected})
+ ![equation](https://latex.codecogs.com/svg.image?fred(R_{mesured})*R_{mesured}=R_{corrected})
 
 
 
