@@ -61,7 +61,7 @@ There is 2 keys to control the script:
  - S key is used to estimate and save the avrage color in the green rectangle.
  - Q key is used to kill the script. 
 
-In order to start mesurement enter the RGB value of your reference in the text box. Adjust your camera posiitin to make the square above the reference color and press S to save the color. When you have reach the end of your sampling end will appear on the top left corner of the screen.
+In order to start mesurement enter the RGB value of your reference in the text box. Adjust your camera position to make the square above the reference color and press S to save the color. When you have reach the end of your sampling end will appear on the top left corner of the screen.
 
 The script is outpouting a csv file with 6 rows, 3 rows for the RGB refenrence color value, 3 rows for the RGB mesured color value. 
 
@@ -71,10 +71,46 @@ Thus we can determine 3 simples functions that give the corrective factor for ea
 
 With all collected samples we can determine the ![equation](https://latex.codecogs.com/svg.image?\gamma) for each pixel using a scipy first degree interpolation  
 
+ ![interpolation](https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Interpolation_example_linear.svg/300px-Interpolation_example_linear.svg.png)
  
  ![equation](https://latex.codecogs.com/svg.image?fbleu(B_{mesured})*B_{mesured}=B_{corrected})
  ![equation](https://latex.codecogs.com/svg.image?fgreen(G_{mesured})*G_{mesured}=G_{corrected})
  ![equation](https://latex.codecogs.com/svg.image?fred(R_{mesured})*R_{mesured}=R_{corrected})
+ 
+## Skin Tone determination
+
+Make shure that the calibration csv file path is the good one in the python script
+
+```python
+with open('calibration.csv', newline='') as csvfile: #Change your file path here 
+    reader = csv.DictReader(csvfile)
+    for row in reader:
+```
+
+In order to start skin Tone determination enter in your shell :
+
+```sh
+sudo python3 Skintone.py
+```
+This window will appear on your screen: 
+
+There is 2 keys to control the script:
+ - P key is used to estimate the skin tone.
+ - Q key is used to kill the script. 
+
+Adjust your camera position to make the square above the skin. Once P is pressed a second windows open and display the corrected image and the skin tone estimation is displayed in the left top corner of the main window.
+
+## Appendix 
+
+In order to collect RGB references of the Pantone Skin Tone Guide you can execute:
+```sh
+python3 scaper.py
+```
+This script is scrapping the [Encycolorpedia](https://encycolorpedia.fr/) website. 
+It output a csv file that macth Pantone code with RGB code. The csv file is avaliable on the repo. 
+
+I used this camera to test each of my scripts [Camera](https://www.amazon.fr/Bysameyee-Microscope-3840x2160P-dinspection-grossissement/dp/B09NBY6G9S?source=ps-sl-shoppingads-lpcontext&ref_=fplfs&psc=1&smid=A1JXU0GT57OBZF), few camera brackets stl are also avaliable on the repo. 
+
 
 
 
