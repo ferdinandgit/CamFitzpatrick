@@ -3,6 +3,7 @@ import numpy as np
 import scipy
 from scipy.interpolate import *
 import keyboard
+import csv
 
 #=====Functions=====#
 
@@ -54,17 +55,17 @@ def fitzPatrickClassification(ita):
     Return:
         Fitzpatrick indice in range [|0;6|]"""
 
-    if 0<ita:
+    if 37<ita:
          return 1
-    elif -37<ita<=0:
+    elif -20<ita<=37:
          return 2
-    elif -60<ita<=-37:
+    elif -37.5<ita<=-20:
          return 3
-    elif -70<ita<=-60:
+    elif -55<ita<=-37.5:
         return 4
-    elif -80<ita<=-70:
+    elif -72.5<ita<=-55:
         return 5
-    elif ita<=-80:
+    elif ita<=-72.5:
         return 6
 
 
@@ -219,87 +220,34 @@ def bgrCorrection(fb,fg,fr,img):
 
 #=====Main=====#
 
-mesure=[0 for k in range(4)]
-reference=[]
-gammalist=[]
-#bgrref=[[180,187,231],[156,171,218],[127,144,194],[98,116,160],[87,105,147],[114,113,129],[255,255,255],[0,0,0]]
-bgrref = [[43,229,255],[119,63,213],[219,151,0],[71,74,78]]
-flag=[1 for k in range(4)]
-vid = cv2.VideoCapture(2)
-srelease=False
 frelease=False
-mesure=[[0,0,0] for k in range(4)]
-i=0 
-avggammableu=0
-avggammared=0
-avggammagreen=0
+Scan=[]
+Truevalue=[]
+gammared=[]
+gammableu=[]
+gammagreen=[]
+mesureredlist=[]
+mesuregreenlist=[]
+mesurebleulist=[]
 
+with open('calibration.csv', newline='') as csvfile:
+    reader = csv.DictReader(csvfile)
+    for row in reader:
+        Scan.append([row['R_ref'],row['G_ref'],row['B_ref'], row['R'],row['G'],row['B']])
+Scan.pop(1)
+for couple in Scan:
+    gammared.append(float(couple[0])/float(couple[3]))
+    gammagreen.append(float(couple[1])/float(couple[4]))
+    gammableu.append(float(couple[2])/float(couple[5]))
+    mesureredlist.append(float(couple[3]))
+    mesuregreenlist.append(float(couple[4]))
+    mesurebleulist.append(float(couple[5]))
 
-keyboard.on_release_key('s',keyboardInterrupt,False)
-while(True):
-      
-    ret, frame = vid.read()
-    a,b,c=np.shape(frame)
-    cv2.rectangle(frame, (int(b/2)-100,int(a/2)-100), (int(b/2)+100,int(a/2)+100), (0, 255, 0), 3)
-    cropped_frame = frame[(int(a/2)-90):(int(a/2)+90),(int(b/2)-90):(int(b/2)+90)]
-    
-    bleu=np.average(cropped_frame[:,:,:1])
-    green=np.average(cropped_frame[:,:,1:2])
-    red=np.average(cropped_frame[:,:,2:3])
-    
+print(gammared)
 
-    frame=text(str(i),frame,(50,50))  
-    frame=text("RGB: "+str(round(red))+','+str(round(green))+','+str(round(bleu)),frame,(50,150))
-    
-    cv2.imshow('frame', frame)
-      
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-    
-        
-    if srelease:
-        if i<4:
-            i+=1
-            if bgrref[i-1][0]!=bleu:
-                gammableu=bgrref[i-1][0]/bleu
-            else: 
-                gammableu=1
-            if bgrref[i-1][1]!=green:
-                gammagreen=bgrref[i-1][1]/green
-            else:
-                gammagreen=1
-            if bgrref[i-1][2]!=red:
-                gammared=bgrref[i-1][2]/red
-            else:
-                gammared=1
-            gammalist.append([gammableu,gammagreen,gammared])
-            mesure[i-1][0]=bleu
-            mesure[i-1][1]=green
-            mesure[i-1][2]=red
-            print(gammalist)
-        srelease=False 
-
-
-
-
-
-gammalist=np.array(gammalist)
-mesure=np.array(mesure)
-
-gammableulist=flatten_list(gammalist[:,:1].tolist())
-gammagreenlist=flatten_list(gammalist[:,1:2].tolist())
-gammaredlist=flatten_list(gammalist[:,2:3].tolist())
-
-mesurebleulist=flatten_list(mesure[:,:1].tolist())
-mesuregreenlist=flatten_list(mesure[:,1:2].tolist())
-mesureredlist=flatten_list(mesure[:,2:3].tolist())
-
-fbleu=scipy.interpolate.interp1d(mesurebleulist,gammableulist,bounds_error=False,fill_value="extrapolate")
-fgreen=scipy.interpolate.interp1d(mesuregreenlist,gammagreenlist,bounds_error=False,fill_value="extrapolate")
-fred=scipy.interpolate.interp1d(mesureredlist,gammaredlist,bounds_error=False,fill_value="extrapolate")
-
-vid.release()
-cv2.destroyAllWindows()
+fbleu=scipy.interpolate.interp1d(mesurebleulist,gammableu,bounds_error=False,fill_value="extrapolate")
+fgreen=scipy.interpolate.interp1d(mesuregreenlist,gammagreen,bounds_error=False,fill_value="extrapolate")
+fred=scipy.interpolate.interp1d(mesureredlist,gammared,bounds_error=False,fill_value="extrapolate")
 
     
 
@@ -330,11 +278,11 @@ while(True):
             lab[2]=0.0000001
         itavalue=ita(lab)
         indice=fitzPatrickClassification(itavalue)
-        cv2.imshow('cropped_frame',cropped_frame)
+        cv2.imshow('Corrected_IMG',cropped_frame)
         cv2.waitKey(1)
         frelease=False
 
-    cv2.imshow('frame', frame)
+    cv2.imshow('Skintone.py', frame)
       
     # the 'q' button is set as the
     # quitting button you may use any

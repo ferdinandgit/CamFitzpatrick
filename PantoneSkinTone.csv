@@ -122,3 +122,7 @@ Pantone Code,hexacode,red,green,bleu
 5R05,c39990,195,153,144
 5R06,c1958c,193,149,140
 5R07,be9186,190,145,134
+jaune ,dddddd,255,229,43
+rouge,dddddd,213,63,119
+bleu ,dddddd,0,151,219
+noir,dddddd,71,74,78

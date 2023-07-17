@@ -3,7 +3,10 @@ import numpy as np
 import scipy
 from scipy.interpolate import *
 import keyboard
-import csv 
+import csv
+from tkinter import *
+from tkinter.simpledialog import askstring
+from tkinter.messagebox import showinfo
 
 #======Functions=====#
 
@@ -35,22 +38,36 @@ def keyboardInterrupt(data):
     global srelease
     srelease = True
 
+def askUser():
+
+    """ Popup text box asking for RGB code
+    Args:
+        -
+    Return 
+        Array with rgb code """
+
+    a=''
+    RGBref=[]
+    name = askstring('RBG reference', 'R,G,B?')
+    for i in name:
+        if i!= ',':
+            a+=i
+        else:
+            print(a)
+            RGBref.append(a)
+            a=''
+    RGBref.append(a)
+    return RGBref
+
+
 
 #======Main======#
 
 srelease=False #Flag used to activate the action in while loop when the key s is release
 nbscannedcolor=0 #count the number of scanned color 
 row=[] #store data that will be writed in the csv file  
-pantonecode=[] #store pantone color code in the order of PantoneSkinTone 
+references=[] #store reference color code.
 nbsamples=110 #
-
-#Read the txt file that contains pantone color code in the PantoneSkinTone 
-#!!!!!WARNING Make shure to specify the good file path WANRING!!!!!
-
-with open("pantoneordo.txt") as file:
-    while line := file.readline():
-        pantonecode.append(line.replace('\n','').replace(' ',''))
-pantonecode.append('end')
 
 
 #Open video flow of the microscope  
@@ -80,7 +97,7 @@ while(True):
     red=np.average(cropped_frame[:,:,2:3])
 
     #Print usefull text on the frame 
-    frame=text(str(nbscannedcolor)+"  "+str(pantonecode[nbscannedcolor]),frame,(50,50))  
+    frame=text(str(nbscannedcolor),frame,(50,50))  
     frame=text("RGB: "+str(round(red))+','+str(round(green))+','+str(round(bleu)),frame,(50,150))
     
     #display in the frame 
@@ -90,10 +107,11 @@ while(True):
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
     
-    #when s key is release => store mesured data and pantone color code in row for csv writing      
+    #when s key is release => store mesured data and reference color code in row for csv writing      
     if srelease:
+        colorref=askUser()
         if nbscannedcolor<nbsamples:
-            row.append([pantonecode[nbscannedcolor],red,green,bleu,nbscannedcolor])
+            row.append([colorref[0],colorref[1],colorref[2],red,green,bleu,nbscannedcolor])
             nbscannedcolor+=1
             srelease=False
         else: 
@@ -105,11 +123,11 @@ cv2.destroyAllWindows()
 
 #set each fileds of thre csv file
 
-fields=["Pantone","R","G","B","i"]
+fields=["R_ref","G_ref","B_ref","R","G","B"]
 
 #write row to csv following fiels parameters orders
 
-with open('pantone', 'w') as f:
+with open('calibration.csv', 'w') as f:
      
     write = csv.writer(f)
     write.writerow(fields)
