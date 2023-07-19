@@ -85,7 +85,7 @@ while(True):
     
     try: 
         a,b,c=np.shape(frame) #this will fail if there is no video input
-   except:
+    except:
         print("Check your video input")
         break;
 
