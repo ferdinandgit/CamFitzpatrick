@@ -218,7 +218,7 @@ mesureredlist=[] #store red measure of each pixel from the camera
 mesuregreenlist=[] #store green measure of each pixel from the camera
 mesurebleulist=[] #store bleu measure of each pixel from the camera
 
-#red the csv file with references and measures from the camera. Calibration csv is composed of 6 rows, 3 for RGB reference, 3 for RGB measure.  
+#read the csv file with references and measures from the camera. Calibration csv is composed of 6 rows, 3 for RGB reference, 3 for RGB measure.  
 with open('calibration.csv', newline='') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
@@ -294,15 +294,10 @@ while(True):
 
     cv2.imshow('Skintone.py', frame)
       
-    # the 'q' button is set as the
-    # quitting button you may use any
-    # desired button of your choice
+    # the 'q' button is set as the quitting button
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
-  
-# After the loop release the cap object
 vid.release()
-# Destroy all the windows
 cv2.destroyAllWindows()
 
 
