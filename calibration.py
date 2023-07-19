@@ -63,7 +63,7 @@ def askUser():
 
 #======Main======#
 
-srelease=False #Flag used to activate the action in while loop when the key s is release
+srelease=False #Flag used to activate an action in while loop when the key s is release
 nbscannedcolor=0 #count the number of scanned color 
 row=[] #store data that will be writed in the csv file  
 references=[] #store reference color code.
@@ -82,7 +82,12 @@ keyboard.on_release_key('s',keyboardInterrupt,False)
 while(True):
           
     ret, frame = vid.read()
-    a,b,c=np.shape(frame)
+    
+    try: 
+        a,b,c=np.shape(frame) #this will fail if there is no video input
+   except:
+        print("Check your video input")
+        break;
 
     #Draw a rectangle on the frame
     cv2.rectangle(frame, (int(b/2)-100,int(a/2)-100), (int(b/2)+100,int(a/2)+100), (0, 255, 0), 3)

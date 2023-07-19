@@ -9,25 +9,14 @@ import csv
 
 def keyboardInterrutp1(data):
     
-    """Callback for keyboard event s is release.
+    """Callback for keyboard event p is release.
     Args:
         data: keyboard.event not usefull here
     Return:
         - """
 
-    global frelease
-    frelease=True 
-
-def keyboardInterrupt(data):
-    
-    """Callback for keyboard event s is release.
-    Args:
-        data: keyboard.event not usefull here
-    Return:
-        - """
-    
-    global srelease
-    srelease = True
+    global prelease
+    prelease=True 
 
 
 def flatten_list(matrix):
@@ -220,22 +209,26 @@ def bgrCorrection(fb,fg,fr,img):
 
 #=====Main=====#
 
-frelease=False
-Scan=[]
-Truevalue=[]
-gammared=[]
-gammableu=[]
-gammagreen=[]
-mesureredlist=[]
-mesuregreenlist=[]
-mesurebleulist=[]
+prelease=False #Flag used to activate an action in while loop when the key s is release
+storecsv=[] # array for csv rows
+gammared=[] #store correction factor for red image correction 
+gammableu=[] #store correction factor for bleu image correction
+gammagreen=[] #store correction factor for green image correction 
+mesureredlist=[] #store red measure of each pixel from the camera
+mesuregreenlist=[] #store green measure of each pixel from the camera
+mesurebleulist=[] #store bleu measure of each pixel from the camera
 
+#red the csv file with references and measures from the camera. Calibration csv is composed of 6 rows, 3 for RGB reference, 3 for RGB measure.  
 with open('calibration.csv', newline='') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
-        Scan.append([row['R_ref'],row['G_ref'],row['B_ref'], row['R'],row['G'],row['B']])
-Scan.pop(1)
-for couple in Scan:
+        storecsv.append([row['R_ref'],row['G_ref'],row['B_ref'], row['R'],row['G'],row['B']])
+
+#Remove the column descriptor of the csv file.
+storecsv.pop(1)
+
+#Store value for interpolation calculation 
+for couple in storecsv:
     gammared.append(float(couple[0])/float(couple[3]))
     gammagreen.append(float(couple[1])/float(couple[4]))
     gammableu.append(float(couple[2])/float(couple[5]))
@@ -243,35 +236,51 @@ for couple in Scan:
     mesuregreenlist.append(float(couple[4]))
     mesurebleulist.append(float(couple[5]))
 
-print(gammared)
-
+#determine R,G,B correction functions 
 fbleu=scipy.interpolate.interp1d(mesurebleulist,gammableu,bounds_error=False,fill_value="extrapolate")
 fgreen=scipy.interpolate.interp1d(mesuregreenlist,gammagreen,bounds_error=False,fill_value="extrapolate")
 fred=scipy.interpolate.interp1d(mesureredlist,gammared,bounds_error=False,fill_value="extrapolate")
 
-    
-
+#Open video flow of the microscope  
+#!!!!!WARNING vid = cv2.VideoCapture(x), x should be changed if your run the script on a orther computer WARNING!!!!!!
 vid = cv2.VideoCapture(2)
 
+#Setup keyboardInterrupt call keyboardInterrutp1 when p is release
 keyboard.on_release_key('p',keyboardInterrutp1)
-indice=0
-itavalue=0
-lab=[0 for k in range(3)]
+
+
+indice=0 #displayed Fitzpatrick indice 
+itavalue=0 #displayed ita value 
+lab=[0 for k in range(3)] #displayed lab value
+
 while(True):
       
     # Capture the video frame
     # by frame
     ret, frame = vid.read()
-    a,b,c=np.shape(frame)
+    try:
+        a,b,c=np.shape(frame) #this will fail if there is no video input 
+    except:
+        print("Check your video input")
+        break
+
+    #Draw a rectangle on the frame 
     cv2.rectangle(frame, (int(b/2)-100,int(a/2)-100), (int(b/2)+100,int(a/2)+100), (0, 255, 0), 3)
+    
+    #Crop the area in the green triangle
     cropped_frame = frame[(int(a/2)-90):(int(a/2)+90),(int(b/2)-90):(int(b/2)+90)]
-    #cropped_frame = bgrGammaCorrection(fbleu,fgreen,fred,cropped_frame)
+    
+    #Estimation of the color in the green triangle 
     brg=estimateBrg(cropped_frame)
-        
+    
+    #Write data on the left corner of the screen
     frame=text("Phototype"+str(indice)+"_"+str(itavalue),frame,(50,50))
     frame=text("l:"+str(lab[0])+"a:"+str(lab[1])+"b:"+str(lab[2]),frame,(50,150))
+   
     
-    if frelease:
+    if prelease: #when p is release
+        
+        #Apply  color correction to the cropped_frame
         cropped_frame = bgrCorrection(fbleu,fgreen,fred,cropped_frame)
         lab=rgbToLab(bgrToRgb(brg))
         if lab[2]<=0:
@@ -280,7 +289,8 @@ while(True):
         indice=fitzPatrickClassification(itavalue)
         cv2.imshow('Corrected_IMG',cropped_frame)
         cv2.waitKey(1)
-        frelease=False
+        prelease=False
+    
 
     cv2.imshow('Skintone.py', frame)
       
