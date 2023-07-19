@@ -1,9 +1,9 @@
- bs4==0.0.1 
- scipy==1.8.0 
- keyboard==0.13.5
- urllib3==1.26.5
- numpy==1.24.2
- #You need to install opencv2 
+ bs4 
+ scipy 
+ keyboard
+ urllib3
+ numpy
+ opencv-contrib-python
 
 
 
