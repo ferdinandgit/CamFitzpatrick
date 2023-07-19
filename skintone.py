@@ -208,7 +208,7 @@ def bgrCorrection(fb,fg,fr,img):
     return img
 
 #=====Main=====#
-
+videoinput=2 #find the video input associated to your device
 prelease=False #Flag used to activate an action in while loop when the key s is release
 storecsv=[] # array for csv rows
 gammared=[] #store correction factor for red image correction 
@@ -243,7 +243,7 @@ fred=scipy.interpolate.interp1d(mesureredlist,gammared,bounds_error=False,fill_v
 
 #Open video flow of the microscope  
 #!!!!!WARNING vid = cv2.VideoCapture(x), x should be changed if your run the script on a orther computer WARNING!!!!!!
-vid = cv2.VideoCapture(2)
+vid = cv2.VideoCapture(videoinput)
 
 #Setup keyboardInterrupt call keyboardInterrutp1 when p is release
 keyboard.on_release_key('p',keyboardInterrutp1)

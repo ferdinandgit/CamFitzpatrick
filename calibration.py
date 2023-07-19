@@ -62,7 +62,7 @@ def askUser():
 
 
 #======Main======#
-
+videoinput=2 #find the video input associated to your video device
 srelease=False #Flag used to activate an action in while loop when the key s is release
 nbscannedcolor=0 #count the number of scanned color 
 row=[] #store data that will be writed in the csv file  
