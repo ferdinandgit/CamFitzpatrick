@@ -83,8 +83,8 @@ Thus we can determine 3 simples functions that give the correction factor for ea
 With all collected samples we can determine the ![equation](https://latex.codecogs.com/svg.image?\gamma) for each pixel using a scipy first degree interpolation  
 
  ![equation](https://latex.codecogs.com/svg.image?fbleu(B_{mesured})*B_{mesured}=B_{corrected})  
- ![equation](https://latex.codecogs.com/svg.image?fgreen(G_{mesured})*G_{mesured}=G_{corrected})
- ![equation](https://latex.codecogs.com/svg.image?fred(R_{mesured})*R_{mesured}=R_{corrected})
+ ![equation](https://latex.codecogs.com/svg.image?fgreen(G_{mesured})*G_{mesured}=G_{corrected})  
+ ![equation](https://latex.codecogs.com/svg.image?fred(R_{mesured})*R_{mesured}=R_{corrected})  
  
 ## Skin Tone determination
 
