@@ -236,11 +236,21 @@ for couple in storecsv:
     mesuregreenlist.append(float(couple[4]))
     mesurebleulist.append(float(couple[5]))
 
-#determine R,G,B correction functions 
-fbleu=scipy.interpolate.interp1d(mesurebleulist,gammableu,bounds_error=False,fill_value="extrapolate")
-fgreen=scipy.interpolate.interp1d(mesuregreenlist,gammagreen,bounds_error=False,fill_value="extrapolate")
-fred=scipy.interpolate.interp1d(mesureredlist,gammared,bounds_error=False,fill_value="extrapolate")
-
+#determine R,G,B correction functions
+try:
+    fbleu=scipy.interpolate.interp1d(mesurebleulist,gammableu,bounds_error=False,fill_value="extrapolate")
+    fgreen=scipy.interpolate.interp1d(mesuregreenlist,gammagreen,bounds_error=False,fill_value="extrapolate")
+    fred=scipy.interpolate.interp1d(mesureredlist,gammared,bounds_error=False,fill_value="extrapolate")
+except:
+    print("Check your calibration csv file")
+    print("The script will run without calibration")
+    def fbleu(x):
+        return 1
+    def fgreen(x):
+        return 1
+    def fred(x):
+        return 1
+          
 #Open video flow of the microscope  
 #!!!!!WARNING vid = cv2.VideoCapture(x), x should be changed if your run the script on a orther computer WARNING!!!!!!
 vid = cv2.VideoCapture(videoinput)
