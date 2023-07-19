@@ -31,7 +31,7 @@ then activate the virtual environement:
 source ./CamFitzpatrickvenv/bin/activate
 ```
 Now you can start any python script in the virtual environement.
-in order to leave the virtual environement:
+In order to leave the virtual environement:
 ```sh 
 deactivate
 ```
@@ -44,7 +44,7 @@ then activate the virtual environement:
 .\CamFitzpatrick\Scripts\activate
 ```
 Now you can start any python script in the virtual environement.
-in order to leave the virtual environement:
+In order to leave the virtual environement:
 ```sh 
 deactivate
 ```
