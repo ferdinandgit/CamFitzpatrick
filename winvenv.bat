@@ -9,3 +9,5 @@ goto:eof
 
 s:errorNoPython
 echo Error Python not installed
+
+timeout /t 5 
