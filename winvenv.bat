@@ -3,9 +3,9 @@ if errorlevel 1 goto errorNoPython
 
 pip install virtualenv 
 python -m venv CamFitzpatrickvenv
-.\CamFitzpatrickvenv\Scripts\pip3 install -r requirements.txt
+for /r .\windependencies %%F in (*.*) do .\CamFitzpatrickvenv\Scripts\pip install  %%F
 
 goto:eof
 
-:errorNoPython
+s:errorNoPython
 echo Error Python not installed
