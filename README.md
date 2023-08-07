@@ -19,36 +19,18 @@ CameFitzpatrick uses a number python open source projects to work properly:
 
 ## Installation
 
-This project requires [Python](https://www.python.org/) v3.10.0+ to run.
+This project requires [Python](https://www.python.org/) v3.11.0+ to run.
 
 Start python virtual environement installation script   
 for linux users:
 ```sh
 ./linuxvenv.sh
 ```
-then activate the virtual environement:
-```sh 
-source ./CamFitzpatrickvenv/bin/activate
-```
-Now you can start any python script in the virtual environement.
-In order to leave the virtual environement:
-```sh 
-deactivate
-```
+
 for windows users: 
 ```sh
 .\winvenv.bat 
 ```
-then activate the virtual environement:
-```sh 
-.\CamFitzpatrickvenv\Scripts\activate
-```
-Now you can start any python script in the virtual environement.
-In order to leave the virtual environement:
-```sh 
-deactivate
-```
-
 
 ## Camera Calibration
 In order to calibrate your camera you need this kind of color samples. You can use other colors samples as long as they are not printed otherwise the calibration will not be efficient. Painted samples will be preferred.
@@ -63,9 +45,14 @@ videoinput=2 #find the number that is associated with your video device
 srelease=False
 nbscannedcolors=0
 ```
-Then in order to start calibration enter in your shell 
+Then in order to start calibration run
+for linux users:
 ```sh
-python3 calibration.py 
+sudo startcalibration.sh 
+```
+for windows users:
+```sh
+startcalibration.bat
 ```
 
 There is 2 keys to control the script:
@@ -82,9 +69,9 @@ Thus we can determine 3 simples functions that give the correction factor for ea
 
 With all collected samples we can determine the ![equation](https://latex.codecogs.com/svg.image?\gamma) for each pixel using a scipy first degree interpolation  
 
- ![equation](https://latex.codecogs.com/svg.image?fbleu(B_{mesured})*B_{mesured}=B_{corrected})  
- ![equation](https://latex.codecogs.com/svg.image?fgreen(G_{mesured})*G_{mesured}=G_{corrected})  
- ![equation](https://latex.codecogs.com/svg.image?fred(R_{mesured})*R_{mesured}=R_{corrected})  
+ ![equation](https://latex.codecogs.com/svg.image?fbleu(B_{mesured})*B_{mesured}=B_{corrected})
+ ![equation](https://latex.codecogs.com/svg.image?fgreen(G_{mesured})*G_{mesured}=G_{corrected})
+ ![equation](https://latex.codecogs.com/svg.image?fred(R_{mesured})*R_{mesured}=R_{corrected})
  
 ## Skin Tone determination
 
@@ -96,10 +83,15 @@ with open('calibration.csv', newline='') as csvfile: #Change your file path here
     for row in reader:
 ```
 
-In order to start skin Tone determination enter in your shell :
+In order to start skin Tone determination run:
 
+for linux users: 
 ```sh
-python3 skintone.py
+sudo startskintone.py 
+```
+for windows users:
+```sh
+startskintone.bat
 ```
 
 There is 2 keys to control the script:
@@ -112,6 +104,9 @@ Adjust your camera position to make the square above the skin. Once P is pressed
 
 
 I used this [Camera](https://www.amazon.fr/Bysameyee-Microscope-3840x2160P-dinspection-grossissement/dp/B09NBY6G9S?source=ps-sl-shoppingads-lpcontext&ref_=fplfs&psc=1&smid=A1JXU0GT57OBZF) to test each of my scripts, few camera brackets 3D files are also avaliable on the repo. 
+
+
+
 
 
 
