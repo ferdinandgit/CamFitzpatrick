@@ -1,9 +1,0 @@
- bs4 
- scipy 
- keyboard
- urllib3
- numpy
- opencv-contrib-python
-
-
-
