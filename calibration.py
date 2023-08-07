@@ -73,7 +73,7 @@ nbsamples=110 #
 #Open video flow of the microscope  
 #!!!!!WARNING vid = cv2.VideoCapture(x), x should be changed if your run the script on a orther computer WARNING!!!!!!
 
-vid = cv2.VideoCapture(2)
+vid = cv2.VideoCapture(videoinput)
 
 #Setup keyboard interruption with keyboardInterrupt callback 
 
