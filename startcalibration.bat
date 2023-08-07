@@ -1,2 +1,2 @@
 .\CamFitzpatrickvenv\Scripts\python calibration.py 
-timeout /t 5 
+pause
